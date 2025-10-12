@@ -1,6 +1,7 @@
 {
-  "buildCommand": "cd facecam && npm run build",
+  "buildCommand": "cd facecam && npm install && npm run build",
   "outputDirectory": "facecam/dist/facecam/browser",
+  "installCommand": "cd facecam && npm install",
   "rewrites": [
     {
       "source": "/(.*)",
