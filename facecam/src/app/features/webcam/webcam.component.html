@@ -1,0 +1,22 @@
+<div class="container py-3">
+  <div class="d-flex gap-2 mb-3">
+    <button class="btn btn-primary" (click)="onStart()">Start</button>
+    <button class="btn btn-secondary" (click)="onStop()">Stop</button>
+    <button class="btn btn-outline-info" (click)="onSnapshot()">Snapshot</button>
+    <input type="file" accept="image/*" (change)="onUpload($event)" class="form-control w-auto"/>
+  </div>
+
+  <div class="position-relative" style="max-width: 720px;">
+    <video #video autoplay playsinline class="w-100 rounded border"></video>
+    <canvas #overlay class="position-absolute top-0 start-0 w-100 h-100"></canvas>
+  </div>
+
+  <div class="mt-3">
+    <h5>Detected Faces</h5>
+    <div *ngFor="let f of faces$ | async" class="small">
+      <code>{{ f.box.width | number:'1.0-0' }}×{{ f.box.height | number:'1.0-0' }}</code>
+      — Age: {{ f.age || '?' }}, Gender: {{ f.gender || '?' }},
+      Emotion: {{ topExpression(f.expressions) }}
+    </div>
+  </div>
+</div>
