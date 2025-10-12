@@ -1,1 +1,49 @@
-/* You can add global styles to this file, and also import other style files */
+
+// Enable Bootstrap dark mode globally
+body {
+	background-color: #181a1b !important;
+	color: #f8f9fa !important;
+}
+
+.bg-light, .card.bg-light, .navbar.bg-light, .modal-content.bg-light {
+	background-color: #23272b !important;
+	color: #f8f9fa !important;
+}
+
+.card, .modal-content, .dropdown-menu, .popover {
+	background-color: #23272b !important;
+	color: #f8f9fa !important;
+	border-color: #343a40 !important;
+}
+
+.navbar, .navbar-nav .nav-link, .navbar-brand {
+	background-color: #181a1b !important;
+	color: #f8f9fa !important;
+}
+
+.form-control, .form-select {
+	background-color: #23272b !important;
+	color: #f8f9fa !important;
+	border-color: #343a40 !important;
+}
+
+.btn-light, .btn-outline-light {
+	background-color: #23272b !important;
+	color: #f8f9fa !important;
+	border-color: #f8f9fa !important;
+}
+
+.table, .table-striped > tbody > tr:nth-of-type(odd) {
+	background-color: #23272b !important;
+	color: #f8f9fa !important;
+}
+
+// Scrollbar styling for dark mode
+::-webkit-scrollbar {
+	width: 10px;
+	background: #23272b;
+}
+::-webkit-scrollbar-thumb {
+	background: #343a40;
+	border-radius: 5px;
+}

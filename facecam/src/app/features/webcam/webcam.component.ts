@@ -17,8 +17,12 @@ import { take } from 'rxjs/operators';   // ✅ tek seferlik okumak için
   styleUrls: ['./webcam.component.scss']
 })
 export class WebcamComponent implements OnInit, OnDestroy {
+  uploadedImgSrc: string | null = null;
+  uploadedFaces: any[] | null = null;
   @ViewChild('video', { static: true }) videoRef!: ElementRef<HTMLVideoElement>;
   @ViewChild('overlay', { static: true }) canvasRef!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('uploadedImg') uploadedImgRef!: ElementRef<HTMLImageElement>;
+  @ViewChild('uploadedOverlay') uploadedOverlayRef!: ElementRef<HTMLCanvasElement>;
 
   private camera = inject(CameraService);
   private face = inject(FaceService);
@@ -29,7 +33,7 @@ export class WebcamComponent implements OnInit, OnDestroy {
   private drawSub?: Subscription;
 
   async ngOnInit() {
-    // ❌ await this.face.loadModels();  // BURADAN KALDIRDIK
+    await this.face.loadModels(); // Ensure models are loaded for both webcam and upload
     this.effects.setVideo(this.videoRef.nativeElement);
     this.drawSub = interval(200).subscribe(() => this.drawOverlay());
   }
@@ -39,9 +43,7 @@ export class WebcamComponent implements OnInit, OnDestroy {
   }
 
   async onStart() {
-    // ✅ Modelleri burada (kullanıcı Start’a basınca) yükle
     await this.face.loadModels();
-
     await this.camera.start(this.videoRef.nativeElement, { video: { facingMode: 'user' }, audio: false });
     this.store.dispatch(FaceActions.startStream());
   }
@@ -70,14 +72,17 @@ export class WebcamComponent implements OnInit, OnDestroy {
     const img = new Image();
     img.onload = async () => {
       const dets = await this.face.detect(img);
+      console.log('Detected faces:', dets);
       const faces = dets.map((d, idx) => ({
         id: String(idx),
         box: d.detection.box,
         age: d.age ? Math.round(d.age) : undefined,
         gender: d.gender,
-        // FaceExpressions -> düz obje
         expressions: Object.fromEntries(Object.entries(d.expressions)) as { [key: string]: number }
       }));
+      console.log('Faces mapped for store:', faces);
+      this.uploadedImgSrc = img.src;
+      this.uploadedFaces = faces;
       this.store.dispatch(FaceActions.facesDetected({ faces }));
 
       const cnv = this.canvasRef.nativeElement;
