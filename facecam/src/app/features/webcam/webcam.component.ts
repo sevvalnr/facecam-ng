@@ -102,7 +102,11 @@ export class WebcamComponent implements OnInit, OnDestroy {
   private drawOverlay() {
     const video = this.videoRef.nativeElement;
     const canvas = this.canvasRef.nativeElement;
-    if (!video.videoWidth) return;
+    if (!video.videoWidth || !video.videoHeight) {
+      // Debug: log video readiness
+      console.log('Video not ready', { videoWidth: video.videoWidth, videoHeight: video.videoHeight });
+      return;
+    }
 
     canvas.width = video.clientWidth;
     canvas.height = video.clientHeight;
@@ -110,8 +114,17 @@ export class WebcamComponent implements OnInit, OnDestroy {
     const ctx = canvas.getContext('2d')!;
     ctx.clearRect(0,0,canvas.width,canvas.height);
 
-    // ✅ süresiz subscribe yerine tek seferlik oku
+    // Debug: log frame info
+    console.log('Drawing overlay', {
+      videoWidth: video.videoWidth,
+      videoHeight: video.videoHeight,
+      canvasWidth: canvas.width,
+      canvasHeight: canvas.height
+    });
+
     this.faces$.pipe(take(1)).subscribe(faces => {
+      // Debug: log faces detected
+      console.log('Faces for overlay', faces);
       const scaleX = canvas.width / video.videoWidth;
       const scaleY = canvas.height / video.videoHeight;
 

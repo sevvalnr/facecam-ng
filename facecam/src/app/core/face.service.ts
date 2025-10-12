@@ -36,8 +36,12 @@ export class FaceService {
   async detect(input: HTMLVideoElement | HTMLImageElement | HTMLCanvasElement) {
     const faceapi = await this.ensureLib();
     this.assertReady();
+    const options = new faceapi.TinyFaceDetectorOptions({
+      inputSize: 224, // 160 (fastest), 224 (balanced), 320 (most accurate)
+      scoreThreshold: 0.5 // Increase to ignore weak detections
+    });
     const dets = await faceapi
-      .detectAllFaces(input, new faceapi.TinyFaceDetectorOptions())
+      .detectAllFaces(input, options)
       .withFaceLandmarks()
       .withAgeAndGender()
       .withFaceExpressions();
