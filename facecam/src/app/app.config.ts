@@ -1,4 +1,3 @@
-// src/app/app.config.ts
 import {
   ApplicationConfig,
   provideBrowserGlobalErrorListeners,
@@ -15,7 +14,6 @@ import { provideStore } from '@ngrx/store';
 import { provideEffects } from '@ngrx/effects';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 
-// <-- bizim store parçaları
 import { facesReducer } from './store/faces/faces.reducer';
 import { FacesEffects } from './store/faces/faces.effects';
 
@@ -26,11 +24,9 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(),
     provideRouter(routes),
 
-    // NgRx: store + effects KAYDI
     provideStore({ faces: facesReducer }),
     provideEffects([FacesEffects]),
 
-    // Devtools
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
   ],
 };

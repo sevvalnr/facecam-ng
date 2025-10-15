@@ -1,6 +1,4 @@
-// src/app/core/face.service.ts
 import { Injectable } from '@angular/core';
-// import * as faceapi from 'face-api.js';  // ❌ kaldırıyoruz
 
 @Injectable({ providedIn: 'root' })
 export class FaceService {
@@ -37,8 +35,8 @@ export class FaceService {
     const faceapi = await this.ensureLib();
     this.assertReady();
     const options = new faceapi.TinyFaceDetectorOptions({
-      inputSize: 224, // 160 (fastest), 224 (balanced), 320 (most accurate)
-      scoreThreshold: 0.5 // Increase to ignore weak detections
+      inputSize: 224, 
+      scoreThreshold: 0.5 
     });
     const dets = await faceapi
       .detectAllFaces(input, options)

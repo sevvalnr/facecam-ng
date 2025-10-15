@@ -71,24 +71,48 @@ export class WebcamComponent implements OnInit, OnDestroy {
     const file = input.files[0];
     const img = new Image();
     img.onload = async () => {
-      const dets = await this.face.detect(img);
-      console.log('Detected faces:', dets);
-      const faces = dets.map((d, idx) => ({
-        id: String(idx),
-        box: d.detection.box,
-        age: d.age ? Math.round(d.age) : undefined,
-        gender: d.gender,
-        expressions: Object.fromEntries(Object.entries(d.expressions)) as { [key: string]: number }
-      }));
-      console.log('Faces mapped for store:', faces);
-      this.uploadedImgSrc = img.src;
-      this.uploadedFaces = faces;
-      this.store.dispatch(FaceActions.facesDetected({ faces }));
+      try {
+        const dets = await this.face.detect(img);
+        console.log('Detected faces (upload):', dets);
+        const faces = dets.map((d, idx) => ({
+          id: String(idx),
+          box: d.detection.box,
+          age: d.age ? Math.round(d.age) : undefined,
+          gender: d.gender,
+          expressions: Object.fromEntries(Object.entries(d.expressions)) as { [key: string]: number }
+        }));
+        console.log('Faces mapped for store (upload):', faces);
+        this.uploadedImgSrc = img.src;
+        this.uploadedFaces = faces;
+        this.store.dispatch(FaceActions.facesDetected({ faces }));
 
-      const cnv = this.canvasRef.nativeElement;
-      cnv.width = img.width; cnv.height = img.height;
-      cnv.getContext('2d')!.drawImage(img, 0, 0);
-      this.drawOverlay();
+        const overlay = this.uploadedOverlayRef?.nativeElement;
+        if (overlay) {
+          overlay.width = img.naturalWidth;
+          overlay.height = img.naturalHeight;
+          const ctx = overlay.getContext('2d')!;
+          ctx.clearRect(0, 0, overlay.width, overlay.height);
+
+          ctx.lineWidth = 2;
+          ctx.strokeStyle = '#00FF88';
+          ctx.fillStyle = 'rgba(0,0,0,0.6)';
+
+          faces.forEach(f => {
+            const box = f.box;
+            ctx.strokeRect(box.x, box.y, box.width, box.height);
+            const label = `Age:${f.age ?? '?'} | ${f.gender ?? '?'} | ${this.topExpression(f.expressions)}`;
+            ctx.font = '14px sans-serif';
+            const textW = ctx.measureText(label).width;
+            ctx.fillRect(box.x, box.y - 20, textW + 10, 20);
+            ctx.fillStyle = '#fff';
+            ctx.fillText(label, box.x + 5, box.y - 5);
+            ctx.fillStyle = 'rgba(0,0,0,0.6)';
+          });
+        }
+      } catch (err) {
+        console.error('Error detecting faces on upload', err);
+        this.uploadedFaces = [];
+      }
     };
     img.src = URL.createObjectURL(file);
   }
@@ -104,7 +128,6 @@ export class WebcamComponent implements OnInit, OnDestroy {
     const canvas = this.canvasRef.nativeElement;
     if (!video.videoWidth || !video.videoHeight) {
       // Debug: log video readiness
-      console.log('Video not ready', { videoWidth: video.videoWidth, videoHeight: video.videoHeight });
       return;
     }
 
@@ -114,7 +137,6 @@ export class WebcamComponent implements OnInit, OnDestroy {
     const ctx = canvas.getContext('2d')!;
     ctx.clearRect(0,0,canvas.width,canvas.height);
 
-    // Debug: log frame info
     console.log('Drawing overlay', {
       videoWidth: video.videoWidth,
       videoHeight: video.videoHeight,
@@ -123,7 +145,6 @@ export class WebcamComponent implements OnInit, OnDestroy {
     });
 
     this.faces$.pipe(take(1)).subscribe(faces => {
-      // Debug: log faces detected
       console.log('Faces for overlay', faces);
       const scaleX = canvas.width / video.videoWidth;
       const scaleY = canvas.height / video.videoHeight;

@@ -1,59 +1,40 @@
-# Facecam
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.5.
+# 🎥 FaceCam NG – Real-Time Facial & Emotion Recognition (Angular + TypeScript)
 
-## Development server
+A modern **Angular + TypeScript + Bootstrap** web application that uses **face-api.js** for real-time **facial detection, emotion, age, and gender recognition** directly from the user's webcam.  
+All inference runs entirely in the browser — **no image data leaves the device**.
 
-To start a local development server, run:
+Built with a **Redux-style NgRx state management** architecture and deployed via **Vercel**.
 
-```bash
-ng serve
-```
+---
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+##  Live Demo
 
-## Code scaffolding
+ [https://facecam-ng.vercel.app](https://facecam-ng.vercel.app)  
+> Requires HTTPS & webcam permission.
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
 
-```bash
-ng generate component component-name
-```
+##  Features
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+✅ Start / Stop webcam feed  
+✅ Detect multiple faces simultaneously  
+✅ Recognize facial expressions (happy, sad, angry, surprised, neutral, etc.)  
+✅ Estimate age and gender using pre-trained models  
+✅ Overlay bounding boxes & emotion labels in real-time  
+✅ Upload static images for detection (bonus feature)  
+✅ Built with NgRx pattern for state management  
+✅ Mobile-friendly, responsive UI via Bootstrap  
 
-```bash
-ng generate --help
-```
+---
 
-## Building
+## Tech Stack
 
-To build the project run:
+| Layer | Technologies |
+|-------|---------------|
+| Framework | Angular 17+, TypeScript |
+| State Management | NgRx (Actions, Reducers, Effects, Selectors) |
+| ML Library | face-api.js (TensorFlow.js wrapper) |
+| Styling | SCSS + Bootstrap |
+| Deployment | Vercel |
+| Build Tools | Angular CLI, Webpack |
 
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
